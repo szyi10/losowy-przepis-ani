@@ -2,7 +2,5 @@ flask
 flask_cors
 pytz
 schedule
-threading
 requests
-bs4
-json
+beautifulsoup4
