@@ -1,25 +1,12 @@
 import axios from "axios"
 import { Recipe } from "../types"
+import recipes from "./recipes.json"
 
-const API_URL = "https://losowy-przepis-ani.onrender.com/"
+const API_URL = "https://losowy-przepis-ani.onrender.com"
 
 export const getRandomRecipe = async (): Promise<Recipe | null> => {
-  try {
-    const res = await axios({
-      method: "GET",
-      url: `${API_URL}/recipes`,
-    })
-
-    if (res.status === 200) {
-      const randomIndex = Math.floor(Math.random() * res.data.length)
-      return res.data[randomIndex]
-    } else {
-      return null
-    }
-  } catch (error) {
-    console.log(error)
-    return null
-  }
+  const randomIndex = Math.floor(Math.random() * recipes.length)
+  return recipes[randomIndex]
 }
 
 export const getDailyRecipe = async (): Promise<Recipe | null> => {
