@@ -1,6 +1,0 @@
-flask
-flask_cors
-pytz
-schedule
-requests
-beautifulsoup4
