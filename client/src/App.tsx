@@ -1,12 +1,17 @@
-import Controls from "./components/Controls"
-import Header from "./components/Header"
+import { Suspense } from "react"
+import { Routes, Route } from "react-router-dom"
+import { Discord, Home, Random } from "./pages"
 
 const App = () => {
   return (
-    // <main className="bg-white shadow-lg px-6 py-4 rounded-lg">
     <>
-      <Header />
-      <Controls />
+      <Suspense fallback={<p>Gotowanie...</p>}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/losuj-przepis" element={<Random />} />
+          <Route path="/bot-discord" element={<Discord />} />
+        </Routes>
+      </Suspense>
     </>
   )
 }

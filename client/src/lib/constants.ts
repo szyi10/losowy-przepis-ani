@@ -1,4 +1,10 @@
-const RANDOM_TEXTS = [
+export const navLinks = [
+  { label: "Strona główna", url: "/" },
+  { label: "Losuj przepis", url: "/losuj-przepis" },
+  { label: "Discord bot", url: "/bot-discord" },
+]
+
+export const randomTexts = [
   "Co Ania ma dla nas dzisiaj?",
   "Sprawdźmy, co Ania przygotowała tym razem!",
   "Co pysznego Ania nam dziś zaproponuje?",
@@ -10,18 +16,3 @@ const RANDOM_TEXTS = [
   "Co Ania przygotowała na dzisiejszy obiad?",
   "Zobaczmy, co dziś ugotujemy z Anią.",
 ]
-
-const Header = () => {
-  const randomNumber = Math.floor(Math.random() * RANDOM_TEXTS.length)
-
-  return (
-    <header className="flex flex-col items-center text-center">
-      <h2 className="text-2xl font-bold tracking-wide">
-        Losowy przepis Ani Gotuje
-      </h2>
-      <p className="text-slate-600">{RANDOM_TEXTS[randomNumber]}</p>
-    </header>
-  )
-}
-
-export default Header
