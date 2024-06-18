@@ -1,7 +1,7 @@
 import axios from "axios"
 import { Recipe } from "../types"
 
-const API_URL = "http://localhost:5000"
+const API_URL = "https://losowy-przepis-ani.onrender.com/"
 
 export const getRandomRecipe = async (): Promise<Recipe | null> => {
   try {
