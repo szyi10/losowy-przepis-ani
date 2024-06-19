@@ -1,11 +1,12 @@
 const express = require("express")
 const cors = require("cors")
-const cron = require("node-cron")
 const fs = require("fs")
+require("dotenv").config()
 
 const app = express()
 app.use(cors())
 const PORT = process.env.PORT || 3000
+const API_KEY = process.env.API_KEY
 
 let selectedRecipe = {}
 
@@ -30,28 +31,24 @@ const initializeRecipe = () => {
   }
 }
 
-const scheduleDailyTask = () => {
-  const now = new Date()
-  const next = new Date()
-  next.setHours(13)
-  next.setMinutes(8)
-  next.setSeconds(0)
-  if (now > next) {
-    next.setDate(next.getDate() + 1)
-  }
-  const delay = next.getTime() - now.getTime()
-
-  setTimeout(() => {
-    pickRandomRecipe()
-    setInterval(pickRandomRecipe, 24 * 60 * 60 * 1000)
-  }, delay)
-}
-
 initializeRecipe()
-scheduleDailyTask()
 
 app.get("/random_recipe", (req, res) => {
   res.json(selectedRecipe)
+})
+
+const checkApiKey = (req, res, next) => {
+  const apiKey = req.query.apiKey
+  if (apiKey && apiKey === API_KEY) {
+    next()
+  } else {
+    res.status(403).json({ error: "Forbidden" })
+  }
+}
+
+app.post("/update-recipe", checkApiKey, (req, res) => {
+  pickRandomRecipe()
+  res.sendStatus(200)
 })
 
 app.listen(PORT, () => {
