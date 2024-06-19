@@ -1,8 +1,10 @@
 const express = require("express")
+const cors = require("cors")
 const cron = require("node-cron")
 const fs = require("fs")
 
 const app = express()
+app.use(cors())
 const PORT = process.env.PORT || 3000
 
 let selectedRecipe = {}
@@ -21,7 +23,7 @@ const pickRandomRecipe = () => {
 }
 
 // Schedule task
-cron.schedule("45 12 * * *", () => {
+cron.schedule("48 12 * * *", () => {
   pickRandomRecipe()
   console.log("New random recipe selected: ", selectedRecipe)
 })
