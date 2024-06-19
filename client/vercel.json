@@ -1,9 +1,3 @@
 {
-  "version": 2,
-  "builds": [{ "src": "scheduled-function.js", "use": "@now/node" }],
-  "routes": [
-    { "src": "/scheduled-function", "dest": "/scheduled-function" },
-    { "src": "/(.*)", "dest": "/" }
-  ],
-  "cron": "6 14 * * *"
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
 }
