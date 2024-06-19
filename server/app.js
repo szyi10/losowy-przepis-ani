@@ -46,7 +46,7 @@ const checkApiKey = (req, res, next) => {
   }
 }
 
-app.post("/update-recipe", checkApiKey, (req, res) => {
+app.get("/update-recipe", checkApiKey, (req, res) => {
   pickRandomRecipe()
   res.sendStatus(200)
 })
