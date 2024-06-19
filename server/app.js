@@ -9,29 +9,48 @@ const PORT = process.env.PORT || 3000
 
 let selectedRecipe = {}
 
-// Load recipes from JSON file
 const loadRecipes = () => {
   const data = fs.readFileSync("recipes.json")
   return JSON.parse(data)
 }
 
-// Pick random recipe
 const pickRandomRecipe = () => {
   const recipes = loadRecipes()
   const randomIndex = Math.floor(Math.random() * recipes.length)
   selectedRecipe = recipes[randomIndex]
+  fs.writeFileSync("selectedRecipe.json", JSON.stringify(selectedRecipe))
 }
 
-// Schedule task
-cron.schedule("48 12 * * *", () => {
-  pickRandomRecipe()
-  console.log("New random recipe selected: ", selectedRecipe)
-})
+const initializeRecipe = () => {
+  if (fs.existsSync("selectedRecipe.json")) {
+    const data = fs.readFileSync("selectedRecipe.json")
+    selectedRecipe = JSON.parse(data)
+  } else {
+    pickRandomRecipe()
+  }
+}
 
-// Initial pick of the recipe
-pickRandomRecipe()
+const scheduleDailyTask = () => {
+  const now = new Date()
+  const next = new Date()
+  next.setHours(13)
+  next.setMinutes(8)
+  next.setSeconds(0)
+  if (now > next) {
+    next.setDate(next.getDate() + 1)
+  }
+  const delay = next.getTime() - now.getTime()
 
-app.get("/random-recipe", (req, res) => {
+  setTimeout(() => {
+    pickRandomRecipe()
+    setInterval(pickRandomRecipe, 24 * 60 * 60 * 1000)
+  }, delay)
+}
+
+initializeRecipe()
+scheduleDailyTask()
+
+app.get("/random_recipe", (req, res) => {
   res.json(selectedRecipe)
 })
 
