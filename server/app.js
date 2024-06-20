@@ -1,12 +1,29 @@
 const express = require("express")
 const cors = require("cors")
 const fs = require("fs")
+const { initializeApp } = require("firebase/app")
+const { getDatabase, set, ref, child, get } = require("firebase/database")
+require("firebase/database")
 require("dotenv").config()
 
 const app = express()
 app.use(cors())
 const PORT = process.env.PORT || 3000
 const API_KEY = process.env.API_KEY
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCF1_6Pdh93k1CRHJ9TFXLAGiJ_JCkNy1U",
+  authDomain: "losowy-przepis-81a65.firebaseapp.com",
+  databaseURL:
+    "https://losowy-przepis-81a65-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "losowy-przepis-81a65",
+  storageBucket: "losowy-przepis-81a65.appspot.com",
+  messagingSenderId: "375623363213",
+  appId: "1:375623363213:web:9f66dfe950cf93a04a50c4",
+}
+
+const firebaseApp = initializeApp(firebaseConfig)
+const database = getDatabase(firebaseApp)
 
 let selectedRecipe = {}
 
@@ -15,20 +32,24 @@ const loadRecipes = () => {
   return JSON.parse(data)
 }
 
-const pickRandomRecipe = () => {
+const pickRandomRecipe = async () => {
   const recipes = loadRecipes()
   const randomIndex = Math.floor(Math.random() * recipes.length)
   selectedRecipe = recipes[randomIndex]
-  fs.writeFileSync("selectedRecipe.json", JSON.stringify(selectedRecipe))
+  set(ref(database, "selectedRecipe"), selectedRecipe)
 }
 
-const initializeRecipe = () => {
-  if (fs.existsSync("selectedRecipe.json")) {
-    const data = fs.readFileSync("selectedRecipe.json")
-    selectedRecipe = JSON.parse(data)
-  } else {
-    pickRandomRecipe()
-  }
+const initializeRecipe = async () => {
+  const dbRef = ref(getDatabase())
+  get(child(dbRef, "selectedRecipe"))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return
+      } else {
+        pickRandomRecipe()
+      }
+    })
+    .catch((error) => console.log(error))
 }
 
 initializeRecipe()
